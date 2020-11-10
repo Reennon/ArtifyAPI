@@ -7,6 +7,10 @@ class SmokeResorces(Resource):
     """
 
     def get(self):
+        """
 
-        return 'Hello',200
+        Returns (str): Test message "Hello"
+        """
+
+        return 'Hello', 200
 
