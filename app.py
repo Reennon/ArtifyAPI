@@ -11,6 +11,7 @@ APP_PREFIX = "/Artify"
 def create_app(config=None):
     """
     fuction build app
+
     args:
         config (flask.Config): config: API start configuration
     Returns:
