@@ -8,7 +8,6 @@ class SmokeResorces(Resource):
 
     def get(self):
         """
-
         Returns (str): Test message "Hello"
         """
 
