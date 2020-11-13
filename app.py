@@ -21,7 +21,7 @@ def create_app(config=None):
     api = Api(app,prefix=APP_PREFIX)
     app.config.from_object(config)
     app.logger_name = APP_NAME
-    
+
 
     register_smoke_rotes(api)
     return app
@@ -35,5 +35,5 @@ def register_smoke_rotes(api):
     Returns:
          None
     """
-    api.add_resource(SmokeResorces, "/smoke-<index>")
+    api.add_resource(SmokeResorces, "/smoke")
 
