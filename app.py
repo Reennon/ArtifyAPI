@@ -22,6 +22,7 @@ def create_app(config=None):
     app.config.from_object(config)
     app.logger_name = APP_NAME
 
+
     register_smoke_rotes(api)
     return app
 
