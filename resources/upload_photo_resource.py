@@ -1,8 +1,9 @@
 from flask_restful import Resource
-from ArtifyAPI.utils import utils
-from ArtifyAPI import constants
+from ArtifyAPI.constants import Constants
 from flask import request, flash
-from ArtifyAPI.utils import socket_connect
+from ArtifyAPI.utils.utils import Utils
+from ArtifyAPI.utils.socket_connect import SocketConnection
+
 import os
 
 
@@ -20,19 +21,17 @@ class UploadPhotoResource(Resource):
         send Core message with name of photo.
 
         Returns:
-            200
+            200 OK
         """
         file = request.files['file']
-        if file.filename == '':
+        if not file.filename:
             return flash("None selected photo")
-        if not utils.allowed_photo_type(filename=file.filename):
+        if not Utils.allowed_photo_type(filename=file.filename):
             return flash("this image not allowed")
-        file.save(os.path.join(constants.PHOTO_FOLDER_PATH, file.filename))
-        message = 'photo/' + file.filename
-        mes = {"message": message}
-        socket_connect.socket_send(str(mes))
+        file.save(os.path.join(Constants.PHOTO_FOLDER_PATH, file.filename))
+        SocketConnection.socket_send(str({"message": ('photo/' + file.filename)}))
 
-        return 200
+        return "200 OK"
 
 
 
