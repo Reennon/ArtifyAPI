@@ -9,9 +9,13 @@ def run(api):
     Returns:
         None
     """
+
     api.run()
 
 
+
+
 if __name__ == "__main__":
-    api = app.create_app(DevConfig)  # create application
-    run(api)  # start application
+    api = app.create_app(DevConfig)
+    api.run(port=5000, debug=True)
+
