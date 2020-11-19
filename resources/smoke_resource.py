@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from ArtifyAPI.utils.socket_connect import SocketConnection
-
+from http import HTTPStatus
 
 class SmokeResorces(Resource):
     """
@@ -13,5 +13,5 @@ class SmokeResorces(Resource):
         Returns (str): Test message "Hello"
         """
         SocketConnection.socket_send("smoke")
-        return 'Hello', 200
+        return 'Hello', HTTPStatus.OK
 

@@ -1,7 +1,8 @@
 import socket
 from ArtifyAPI.constants import Constants
 
-class SocketConnection():
+
+class SocketConnection:
 
     @staticmethod
     def open_socket(host=Constants.LOCALHOST, port=Constants.PORT_CORE):

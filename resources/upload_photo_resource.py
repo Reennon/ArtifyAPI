@@ -3,13 +3,13 @@ from ArtifyAPI.constants import Constants
 from flask import request, flash
 from ArtifyAPI.utils.utils import Utils
 from ArtifyAPI.utils.socket_connect import SocketConnection
-
+from http import HTTPStatus
 import os
 
 
 class UploadPhotoResource(Resource):
     """
-    POST endpoint hundler to save upload photo by user
+    POST endpoSint hundler to save upload photo by user
     """
 
     def post(self):
@@ -31,7 +31,7 @@ class UploadPhotoResource(Resource):
         file.save(os.path.join(Constants.PHOTO_FOLDER_PATH, file.filename))
         SocketConnection.socket_send(str({"message": ('photo/' + file.filename)}))
 
-        return "200 OK"
+        return HTTPStatus.OK
 
 
 

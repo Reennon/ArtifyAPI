@@ -1,7 +1,7 @@
 from ArtifyAPI.constants import Constants
 
 
-class Utils():
+class Utils:
     @staticmethod
     def allowed_photo_type(filename):
         """
@@ -16,9 +16,6 @@ class Utils():
 
         if '.' in filename:
             extension = filename.rsplit('.', 1)[1].lower()
-            if extension in Constants.ALLOWED_EXTENSIONS_FOR_PHOTO:
-                return True
-            else:
-                return False
+            return extension in Constants.ALLOWED_EXTENSIONS_FOR_PHOTO
         else:
             return False
