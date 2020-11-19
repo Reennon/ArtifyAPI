@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 class SmokeResorces(Resource):
     """
-    GET endpoint hundler to test the process
+    GET endpoint handler to test the process
     """
 
     def get(self):

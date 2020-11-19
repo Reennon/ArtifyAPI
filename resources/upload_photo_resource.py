@@ -9,7 +9,7 @@ import os
 
 class UploadPhotoResource(Resource):
     """
-    POST endpoSint hundler to save upload photo by user
+    POST endpoint handler to save upload photo by user
     """
 
     def post(self):
