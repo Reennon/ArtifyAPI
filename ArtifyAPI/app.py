@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from ArtifyAPI.resources.smoke_resource import SmokeResorces
 from ArtifyAPI.resources.upload_photo_resource import UploadPhotoResource
-
+from ArtifyAPI.resources.upload_video_resource import UploadVideoResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
@@ -38,3 +38,4 @@ def register_resource(api):
     """
     api.add_resource(SmokeResorces, "/smoke")
     api.add_resource(UploadPhotoResource, "/photo")
+    api.add_resource(UploadVideoResource, "/video")

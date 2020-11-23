@@ -19,3 +19,22 @@ class Utils:
             return extension in Constants.ALLOWED_EXTENSIONS_FOR_PHOTO
         else:
             return False
+
+
+    @staticmethod
+    def allowed_video_type(filename):
+        """
+        Args:
+            filename (string): photo name
+
+        func check if video file name extensions is correct.
+
+        Returns:
+            (bool): if file Ok it be True, in else False
+        """
+
+        if '.' in filename:
+            extension = filename.rsplit('.', 1)[1].lower()
+            return extension in Constants.ALLOWED_EXTENSIONS_FOR_VIDEO
+        else:
+            return False
