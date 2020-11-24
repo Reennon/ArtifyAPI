@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import Api
-from ArtifyAPI.resources.smoke_resource import SmokeResorces
-from ArtifyAPI.resources.upload_photo_resource import UploadPhotoResource
-
+from resources.smoke_resource import SmokeResorces
+from resources.upload_photo_resource import UploadPhotoResource
+from resources.upload_script_resource import UploadScriptResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
@@ -16,7 +16,6 @@ def create_app(config=None):
     Returns:
          app (Flask): application
     """
-
 
     app = Flask(APP_NAME)
     api = Api(app,prefix=APP_PREFIX)
@@ -32,9 +31,11 @@ def register_resource(api):
     """
     Connect to API rotes resource
     args:
-        api: API which connect the resource Smoke, photo upload
+        api: API which connect the resource routes
     Returns:
          None
     """
-    api.add_resource(SmokeResorces, "/smoke")
-    api.add_resource(UploadPhotoResource, "/photo")
+    api.add_resource(SmokeResorces, "/smoke")   # test rotes
+    api.add_resource(UploadPhotoResource, "/photo")    # photo upload routes
+    api.add_resource(UploadScriptResource, "/script")   # script upload routes
+

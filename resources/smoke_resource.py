@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from ArtifyAPI.utils.socket_connect import SocketConnection
+from utils.socket_connect import SocketConnection
 from http import HTTPStatus
 
 class SmokeResorces(Resource):

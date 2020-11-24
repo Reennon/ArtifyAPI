@@ -1,5 +1,5 @@
 import socket
-from ArtifyAPI.constants import Constants
+from constants import Constants
 
 
 class SocketConnection:

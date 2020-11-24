@@ -1,5 +1,5 @@
-from ArtifyAPI.settings.settings import DevConfig
-from ArtifyAPI import app
+from settings.settings import DevConfig
+import app
 
 
 def run(api):

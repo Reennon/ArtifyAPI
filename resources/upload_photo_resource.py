@@ -1,8 +1,8 @@
 from flask_restful import Resource
-from ArtifyAPI.constants import Constants
+from constants import Constants
 from flask import request, flash
-from ArtifyAPI.utils.utils import Utils
-from ArtifyAPI.utils.socket_connect import SocketConnection
+from utils.utils import Utils
+from utils.socket_connect import SocketConnection
 from http import HTTPStatus
 import os
 
@@ -17,7 +17,7 @@ class UploadPhotoResource(Resource):
         Args:
             file from request (flask.request.files['file']): photo which send user
 
-        func set file by request and save it on server in folder 'Photo/' and
+        func set file by request and save it on server in folder 'data-storage/Photo/' and
         send Core message with name of photo.
 
         Returns:
@@ -29,7 +29,7 @@ class UploadPhotoResource(Resource):
         if not Utils.allowed_photo_type(filename=file.filename):
             return flash("this image not allowed")
         file.save(os.path.join(Constants.PHOTO_FOLDER_PATH, file.filename))
-        SocketConnection.socket_send(str({"message": ('photo/' + file.filename)}))
+        SocketConnection.socket_send(str({"message": (Constants.PHOTO_FOLDER_PATH + file.filename)}))
 
         return HTTPStatus.OK
 
