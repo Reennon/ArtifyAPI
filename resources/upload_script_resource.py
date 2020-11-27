@@ -10,7 +10,18 @@ import os
 class UploadScriptResource(Resource):
     """
     POST endpoint handler to save script photo by user
+    GET endpoint handler run script on Core
     """
+
+    def get(self):
+        """
+        run script from folder S/Script on core
+
+        Returns:
+             Http response OK
+        """
+        SocketConnection.socket_send(str({"command": "run script"}))
+        return HTTPStatus.OK
 
     def post(self):
         """
@@ -29,7 +40,6 @@ class UploadScriptResource(Resource):
         if not Utils.allowed_script_type(filename=file.filename):
             return flash("this image not allowed")
         file.save(os.path.join(Constants.SCRIPT_FOLDER_PATH, file.filename))
-        SocketConnection.socket_send(str({"message": (Constants.SCRIPT_FOLDER_PATH + file.filename)}))
 
         return HTTPStatus.OK
 
