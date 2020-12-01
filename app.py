@@ -1,11 +1,15 @@
 from flask import Flask
 from flask_restful import Api
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, MigrateCommand
 from resources.smoke_resource import SmokeResorces
 from resources.upload_photo_resource import UploadPhotoResource
 from resources.upload_script_resource import UploadScriptResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app(config=None):
     """
@@ -17,9 +21,20 @@ def create_app(config=None):
          app (Flask): application
     """
 
+    from models.user import User
+    from models.preference import Preference
+    from models.preference_user import Preference_user
+    from models.preferene_module import Preference_module
+    from models.preference_script import Preference_script
+    from models.script import Script
+    from models.module import Module
+
     app = Flask(APP_NAME)
     api = Api(app,prefix=APP_PREFIX)
     app.config.from_object(config)
+    db.init_app(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost:5432/artify_db"
+    migrate.init_app(app, db)
     app.logger_name = APP_NAME
 
     register_resource(api)
