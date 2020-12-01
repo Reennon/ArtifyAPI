@@ -1,0 +1,191 @@
+Index: app.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask\r\nfrom flask_restful import Api\r\nfrom resources.smoke_resource import SmokeResorces\r\nfrom resources.upload_photo_resource import UploadPhotoResource\r\nfrom resources.upload_script_resource import UploadScriptResource\r\nfrom resources.build_resource import BuildResource\r\nfrom resources.run_module_resource import ModuleResource\r\nfrom resources.update_executable_resource import UpdateExecutableResource\r\n\r\nAPP_NAME = \"Artify\"\r\nAPP_PREFIX = \"/Artify\"\r\n\r\ndef create_app(config=None):\r\n    \"\"\"\r\n    fuction build app\r\n\r\n    args:\r\n        config (flask.Config): config: API start configuration\r\n    Returns:\r\n         app (Flask): application\r\n    \"\"\"\r\n\r\n    app = Flask(APP_NAME)\r\n    api = Api(app,prefix=APP_PREFIX)\r\n    app.config.from_object(config)\r\n    app.logger_name = APP_NAME\r\n\r\n    register_resource(api)\r\n\r\n    return app\r\n\r\n\r\ndef register_resource(api):\r\n    \"\"\"\r\n    Connect to API rotes resource\r\n    args:\r\n        api: API which connect the resource routes\r\n    Returns:\r\n         None\r\n    \"\"\"\r\n    api.add_resource(SmokeResorces, \"/smoke\")   # test rotes\r\n    api.add_resource(UploadPhotoResource, \"/photo\")    # photo upload routes\r\n    api.add_resource(UploadScriptResource, \"/script\")   # script upload routes\r\n    api.add_resource(BuildResource,\"/build\")\r\n    api.add_resource(ModuleResource,\"/module\")\r\n    api.add_resource(UpdateExecutableResource,'/python')\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app.py	(revision 7db7d6080f0d14e4f650514a905a095cf2009b04)
++++ app.py	(date 1606830550423)
+@@ -1,5 +1,7 @@
+ from flask import Flask
+ from flask_restful import Api
++from flask_sqlalchemy import SQLAlchemy
++from flask_migrate import Migrate, MigrateCommand
+ from resources.smoke_resource import SmokeResorces
+ from resources.upload_photo_resource import UploadPhotoResource
+ from resources.upload_script_resource import UploadScriptResource
+@@ -9,6 +11,8 @@
+ 
+ APP_NAME = "Artify"
+ APP_PREFIX = "/Artify"
++db = SQLAlchemy()
++migrate = Migrate()
+ 
+ def create_app(config=None):
+     """
+@@ -20,9 +24,20 @@
+          app (Flask): application
+     """
+ 
++    from models.user import User
++    from models.preference import Preference
++    from models.preference_user import Preference_user
++    from models.preferene_module import Preference_module
++    from models.preference_script import Preference_script
++    from models.script import Script
++    from models.module import Module
++
+     app = Flask(APP_NAME)
+     api = Api(app,prefix=APP_PREFIX)
+     app.config.from_object(config)
++    db.init_app(app)
++    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost:5432/artify_db"
++    migrate.init_app(app, db)
+     app.logger_name = APP_NAME
+ 
+     register_resource(api)
+Index: gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>__pychace__\\\r\nvenv\\\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gitignore	(revision 7db7d6080f0d14e4f650514a905a095cf2009b04)
++++ gitignore	(date 1606830746547)
+@@ -1,2 +1,2 @@
+-__pychace__\
+-venv\
++/__pychace__
++/venv
+Index: models/script.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/script.py	(date 1606829521017)
++++ models/script.py	(date 1606829521017)
+@@ -0,0 +1,7 @@
++from app import db
++
++
++class Script(db.Model):
++    id = db.Column(db.Integer, nullable=False, primary_key=True)
++    file_name = db.Column(db.String(50))
++
+Index: models/preferene_module.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/preferene_module.py	(date 1606829521046)
++++ models/preferene_module.py	(date 1606829521046)
+@@ -0,0 +1,6 @@
++from app import db
++
++class Preference_module(db.Model):
++    id = db.Column(db.Integer, nullable=False, primary_key=True)
++    preference_script_id = db.Column(db.Integer, db.ForeignKey('module.id'), nullable=False)
++
+Index: models/preference_script.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/preference_script.py	(date 1606829521024)
++++ models/preference_script.py	(date 1606829521024)
+@@ -0,0 +1,8 @@
++from app import db
++
++
++
++class Preference_script(db.Model):
++    id = db.Column(db.Integer, nullable=False, primary_key=True)
++    preference_script_id = db.Column(db.Integer, db.ForeignKey('script.id'), nullable=False)
++
+Index: models/preference_user.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/preference_user.py	(date 1606829712264)
++++ models/preference_user.py	(date 1606829712264)
+@@ -0,0 +1,7 @@
++from app import db
++
++class Preference_user(db.Model):
++    id = db.Column(db.Integer , nullable=False, primary_key=True)
++    preference_id = db.Column(db.Integer, db.ForeignKey('preference.id'), nullable=False)
++    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
++
+Index: models/preference.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/preference.py	(date 1606829521039)
++++ models/preference.py	(date 1606829521039)
+@@ -0,0 +1,5 @@
++from app import db
++
++class Preference(db.Model):
++    id = db.Column(db.Integer , nullable=False, primary_key=True)
++    name = db.Column(db.String(50), nullable=False)
+Index: models/user.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/user.py	(date 1606829521031)
++++ models/user.py	(date 1606829521031)
+@@ -0,0 +1,8 @@
++from app import db
++
++
++class User(db.Model):
++    id = db.Column(db.Integer , nullable=False, primary_key=True)
++    username = db.Column(db.String(50), nullable=False)
++    password = db.Column(db.String(50), nullable=False)
++    email = db.Column(db.String(50), nullable=False)
+Index: models/module.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- models/module.py	(date 1606828765642)
++++ models/module.py	(date 1606828765642)
+@@ -0,0 +1,7 @@
++
++from app import db
++
++
++class Module(db.Model):
++    id = db.Column(db.Integer, nullable=False, primary_key=True)
++    file_name = db.Column(db.String(50))
+Index: manage.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from settings.settings import DevConfig\r\nimport app\r\n\r\n\r\ndef run(api):\r\n    \"\"\" function Which start the API\r\n    args:\r\n        api (flask_restful.Api): builded API\r\n    Returns:\r\n        None\r\n    \"\"\"\r\n\r\n    api.run()\r\n\r\n\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    api = app.create_app(DevConfig)\r\n    api.run(port=5000, debug=True)\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- manage.py	(revision 7db7d6080f0d14e4f650514a905a095cf2009b04)
++++ manage.py	(date 1606825179481)
+@@ -1,4 +1,6 @@
+ from settings.settings import DevConfig
++from flask_migrate import Migrate, MigrateCommand
++from flask_script import Manager
+ import app
+ 
+ 
+@@ -17,5 +19,8 @@
+ 
+ if __name__ == "__main__":
+     api = app.create_app(DevConfig)
+-    api.run(port=5000, debug=True)
++    manager = Manager(api)
++    migrate = Migrate(app, app.db)
++    manager.add_command('db', MigrateCommand)
++    api.run(host="127.0.0.2",port=5000, debug=True)
+ 

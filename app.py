@@ -21,13 +21,7 @@ def create_app(config=None):
          app (Flask): application
     """
 
-    from models.user import User
-    from models.preference import Preference
-    from models.preference_user import Preference_user
-    from models.preferene_module import Preference_module
-    from models.preference_script import Preference_script
-    from models.script import Script
-    from models.module import Module
+
 
     app = Flask(APP_NAME)
     api = Api(app,prefix=APP_PREFIX)
@@ -54,3 +48,10 @@ def register_resource(api):
     api.add_resource(UploadPhotoResource, "/photo")    # photo upload routes
     api.add_resource(UploadScriptResource, "/script")   # script upload routes
 
+from models.user import User
+from models.preference import Preference
+from models.preference_user import Preference_user
+from models.preferene_module import Preference_module
+from models.preference_script import Preference_script
+from models.script import Script
+from models.module import Module
