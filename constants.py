@@ -1,9 +1,8 @@
-
 class Constants():
     """
     Allowed Extensions
     """
-    ALLOWED_EXTENSIONS_FOR_PHOTO = { 'png', 'jpg', 'jpeg'}
+    ALLOWED_EXTENSIONS_FOR_PHOTO = {'png', 'jpg', 'jpeg'}
     ALLOWED_EXTENSIONS_FOR_SCRIPT = {'cs', 'py', 'dll'}
 
     """

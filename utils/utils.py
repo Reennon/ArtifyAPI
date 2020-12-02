@@ -20,6 +20,7 @@ class Utils:
         else:
             return False
 
+    @staticmethod
     def allowed_script_type(filename):
         """
         Args:
