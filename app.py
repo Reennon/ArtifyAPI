@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required, current_user, login_user
 from resources.smoke_resource import SmokeResorces
 from resources.upload_photo_resource import UploadPhotoResource
 from resources.upload_script_resource import UploadScriptResource
@@ -49,13 +49,23 @@ def create_app(config=None):
         return User.query.get(int(user_id))
 
 
+
     migrate.init_app(app, db)
+
     app.logger_name = APP_NAME
     from auth.auth import auth as auth_blueprint
     import_bluprint_resource()
     app.register_blueprint(auth_blueprint)
 
     register_resource(api)
+
+    @app.before_request
+    def before_request_auth():
+        if not current_user.is_authenticated:
+            user = User.query.filter_by(email="user").first()
+            login_user(user)
+
+
 
     return app
 
@@ -75,3 +85,4 @@ def register_resource(api):
 def import_bluprint_resource():
     from resources.auth.login import login
     from resources.auth.signup import signup
+    from resources.auth.logout import logout
