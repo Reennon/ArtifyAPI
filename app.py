@@ -38,17 +38,12 @@ def create_app(config=None):
     from models.user import User
     from models.preference_user import Preference_user
 
-
-
-
     login_manager = LoginManager()
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def user_loader(user_id):
         return User.query.get(int(user_id))
-
-
 
     migrate.init_app(app, db)
 
@@ -81,6 +76,7 @@ def register_resource(api):
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
     api.add_resource(UploadScriptResource, "/script")  # script upload routes
+
 
 def import_bluprint_resource():
     from resources.auth.login import login

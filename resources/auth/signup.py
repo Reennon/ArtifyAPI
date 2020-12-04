@@ -17,7 +17,7 @@ def signup():
     if user:
         return "this user already registered"
 
-    new_user = User( username=name, password=generate_password_hash(password, method='sha256'), email=email)
+    new_user = User(username=name, password=generate_password_hash(password, method='sha256'), email=email)
     db.session.add(new_user)
     db.session.commit()
     return f"hello {new_user.username}"
