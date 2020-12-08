@@ -63,9 +63,6 @@ def create_app(config=None):
         if not current_user.is_authenticated:
             user = User.query.filter_by(email="user").first()
             login_user(user)
-
-
-
     return app
 
 
@@ -84,6 +81,7 @@ def register_resource(api):
     api.add_resource(UpdateExecutableResource, '/update')
     api.add_resource(NewBuildResource, '/new')
     api.add_resource(BuildResource, '/build')
+
 
 def import_bluprint_resource():
     from resources.auth.login import login

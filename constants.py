@@ -1,4 +1,4 @@
-class Constants():
+class Constants:
     """
     Allowed Extensions
     """

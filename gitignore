@@ -1,2 +1,3 @@
-__pychace__\
-venv\
+\__pychace__\*
+\venv\*
+\.idea\*

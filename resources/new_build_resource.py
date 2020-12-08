@@ -3,8 +3,6 @@ from http import HTTPStatus
 from flask import request
 from flask_restful import Resource
 
-from utils.socket_connect import SocketConnection
-
 
 class NewBuildResource(Resource):
 

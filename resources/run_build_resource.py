@@ -1,6 +1,8 @@
-from flask_restful import Resource
-from utils.socket_connect import SocketConnection
 from http import HTTPStatus
+
+from flask_restful import Resource
+
+from utils.socket_connect import SocketConnection
 
 
 class RunBuildResource(Resource):
@@ -8,6 +10,7 @@ class RunBuildResource(Resource):
     POST send Core command build project
     GET get from Core Build DLL from project
     """
+
     def get(self):
         """
         Get executable DLL from Core
