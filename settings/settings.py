@@ -16,7 +16,3 @@ class DevConfig(Config):
     DEBUG_TB_ENABLE = True
     ASERT_DEBUG = True
     CACHE_TYPE = 'simple'
-
-
-
-

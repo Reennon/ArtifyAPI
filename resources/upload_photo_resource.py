@@ -1,10 +1,12 @@
-from flask_restful import Resource
-from constants import Constants
-from flask import request, flash
-from utils.utils import Utils
-from utils.socket_connect import SocketConnection
-from http import HTTPStatus
 import os
+from http import HTTPStatus
+
+from flask import request, flash
+from flask_restful import Resource
+
+from constants import Constants
+from utils.socket_connect import SocketConnection
+from utils.utils import Utils
 
 
 class UploadPhotoResource(Resource):
@@ -32,6 +34,3 @@ class UploadPhotoResource(Resource):
         SocketConnection.socket_send(str({"message": (Constants.PHOTO_FOLDER_PATH + file.filename)}))
 
         return HTTPStatus.OK
-
-
-
