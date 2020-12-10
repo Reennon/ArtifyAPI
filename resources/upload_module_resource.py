@@ -1,20 +1,21 @@
 import os
-from http import HTTPStatus
 import shutil
+from http import HTTPStatus
+
 from flask import request, flash
 from flask_login import current_user
 from flask_restful import Resource
 
 from app import db
 from constants import Constants
+from models.module import Module
 from models.preference import Preference
-from models.preference_script import Preference_script
 from models.preference_user import Preference_user
-from models.script import Script
+from models.preferene_module import Preference_module
 from utils.utils import Utils
 
 
-class UploadScriptResource(Resource):
+class UploadModuleResource(Resource):
     """
     POST endpoint handler to save script photo by user
     """
@@ -45,20 +46,18 @@ class UploadScriptResource(Resource):
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id))
         if not os.path.isdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name)):
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name))
-            os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name) + "\\Modules")
-            os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name) + "\\Scripts")
+            os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name)+"\\Modules")
+            os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name)+"\\Scripts")
 
-        file.save(os.path.join(Constants.cloud_script_folder_path(current_user, user_preference), file.filename))
-        shutil.copy(Constants.cloud_script_folder_path(current_user, user_preference) + file.filename,
-                    Constants.MODULE_FOLDER_PATH)
+        file.save(os.path.join(Constants.cloud_module_folder_path(current_user, user_preference), file.filename))
+        shutil.copy(Constants.cloud_module_folder_path(current_user, user_preference)+file.filename, Constants.MODULE_FOLDER_PATH)
 
-        if Script.query.filter_by(file_name=str(
-                Constants.cloud_script_folder_path(current_user, user_preference) + file.filename)).first() is None:
-            script = Script(
-                file_name=str(Constants.cloud_script_folder_path(current_user, user_preference) + file.filename))
-            db.session.add(script)
+        if Module.query.filter_by(file_name=str(Constants.cloud_module_folder_path(current_user, user_preference)+file.filename)).first() is None:
+            module = Module(file_name=str(Constants.cloud_module_folder_path(current_user, user_preference)+file.filename))
+            db.session.add(module)
             db.session.commit()
-            preference_module = Preference_script(script_id=script.id, preference_id=user_preference.id)
+            preference_module = Preference_module(module_id=module.id, preference_id=user_preference.id)
             db.session.add(preference_module)
             db.session.commit()
+
         return HTTPStatus.OK

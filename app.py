@@ -5,11 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user
 from resources.smoke_resource import SmokeResorces
 from resources.upload_photo_resource import UploadPhotoResource
-from resources.upload_script_resource import UploadScriptResource
+
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
 from resources.build_resource import BuildResource
+from resources.error_resource import ErrorResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
@@ -74,13 +75,17 @@ def register_resource(api):
     Returns:
          None
     """
+    from resources.upload_script_resource import UploadScriptResource
+    from resources.upload_module_resource import UploadModuleResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
     api.add_resource(UploadScriptResource, "/script")  # script upload routes
-    api.add_resource(RunBuildResource,'/run')
+    api.add_resource(RunBuildResource, '/run')
     api.add_resource(UpdateExecutableResource, '/update')
-    api.add_resource(NewBuildResource, '/new')
+    api.add_resource(NewBuildResource, '/new/<int:id>')
     api.add_resource(BuildResource, '/build')
+    api.add_resource(UploadModuleResource, "/module")
+    api.add_resource(ErrorResource, "/error/<int:id>")
 
 
 def import_bluprint_resource():
