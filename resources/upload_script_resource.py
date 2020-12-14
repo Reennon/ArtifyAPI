@@ -40,6 +40,8 @@ class UploadScriptResource(Resource):
             return "please log in "
 
         user_preference = Preference.query.filter_by(id=user_preference_user.preference_id).first()
+        if not os.path.exists("Cloud"):
+            os.mkdir("Cloud")
 
         if not os.path.exists("Cloud\\Preference_user_" + str(current_user.id)):
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id))
@@ -47,7 +49,10 @@ class UploadScriptResource(Resource):
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name))
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name) + "\\Modules")
             os.mkdir("Cloud\\Preference_user_" + str(current_user.id) + "\\" + str(user_preference.name) + "\\Scripts")
-
+        if not os.path.exists("Preference"):
+            os.mkdir("Preference")
+            os.mkdir("Preference\\Modules")
+            os.mkdir("Preference\\Scripts")
         file.save(os.path.join(Constants.cloud_script_folder_path(current_user, user_preference), file.filename))
         shutil.copy(Constants.cloud_script_folder_path(current_user, user_preference) + file.filename,
                     Constants.MODULE_FOLDER_PATH)
