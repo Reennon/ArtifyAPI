@@ -41,6 +41,7 @@ def create_app(config=None):
     from models.preferene_module import Preference_module
     from models.module import Module
     from models.script import Script
+    from models.curent_preference import Curent_user_preference
     from models.user import User
     from models.preference_user import Preference_user
 
@@ -76,6 +77,7 @@ def register_resource(api):
     Returns:
          None
     """
+    from resources.switch_preference import SwitchPreference
     from resources.upload_script_resource import UploadScriptResource
     from resources.upload_module_resource import UploadModuleResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
@@ -87,7 +89,7 @@ def register_resource(api):
     api.add_resource(BuildResource, '/build')
     api.add_resource(UploadModuleResource, "/module")
     api.add_resource(ErrorResource, "/error/<int:id>")
-
+    api.add_resource(SwitchPreference, "/switch")
 
 def import_bluprint_resource():
     from resources.auth.login import login
