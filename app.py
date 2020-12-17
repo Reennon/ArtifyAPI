@@ -10,6 +10,7 @@ from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
 from resources.build_resource import BuildResource
+from resources.core_resourse import CoreStartResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
@@ -81,6 +82,7 @@ def register_resource(api):
     api.add_resource(UpdateExecutableResource, '/update')
     api.add_resource(NewBuildResource, '/new')
     api.add_resource(BuildResource, '/build')
+    api.add_resource(CoreStartResource, "/core_start")
 
 
 def import_bluprint_resource():
