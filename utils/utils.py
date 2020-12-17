@@ -1,5 +1,5 @@
 from constants import Constants
-
+import os, zipfile
 
 class Utils:
     @staticmethod
@@ -37,3 +37,10 @@ class Utils:
             return extension in Constants.ALLOWED_EXTENSIONS_FOR_SCRIPT
         else:
             return False
+    @staticmethod
+    def unzip_folder(path,name):
+        zip = zipfile.ZipFile(path)
+        os.mkdir(name)
+        zip.extractall(path=name)
+
+

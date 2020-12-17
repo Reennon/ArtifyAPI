@@ -10,7 +10,6 @@ from resources.upload_photo_resource import UploadPhotoResource
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
-from resources.build_resource import BuildResource
 from resources.error_resource import ErrorResource
 
 APP_NAME = "Artify"
@@ -80,6 +79,8 @@ def register_resource(api):
     from resources.switch_preference import SwitchPreference
     from resources.upload_script_resource import UploadScriptResource
     from resources.upload_module_resource import UploadModuleResource
+    from resources.build_resource import BuildResource
+    from resources.load_preference import LoadPreferenceResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
     api.add_resource(UploadScriptResource, "/script")  # script upload routes
@@ -90,6 +91,7 @@ def register_resource(api):
     api.add_resource(UploadModuleResource, "/module")
     api.add_resource(ErrorResource, "/error/<int:id>")
     api.add_resource(SwitchPreference, "/switch")
+    api.add_resource(LoadPreferenceResource, "/load")
 
 def import_bluprint_resource():
     from resources.auth.login import login

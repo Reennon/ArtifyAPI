@@ -1,8 +1,11 @@
 from http import HTTPStatus
 
 from flask import request
+from flask_login import current_user
 from flask_restful import Resource
 
+from constants import Constants
+from models.preference_user import Preference_user
 from utils.socket_connect import SocketConnection
 
 
@@ -36,6 +39,7 @@ class BuildResource(Resource):
             "command": "build"  #string     build command tells core which command to execute
             , "userId":         #int        User ID is required for core to return the build, user gave
             , "dllName":        #string     Dll Name is required for core to name the build, user specified
+            , "path":           #string     Path to the preference folder on cloud
             , "ASSEMBLY_NAME":  #string     Assembly Name is not required for core, but preferred to have one,
                                 #           otherwise core will name it by itself
             , "UNSAFE_CODE":    #boolean    Unsafe Code
@@ -49,9 +53,11 @@ class BuildResource(Resource):
             Http response 200
 
         """
+        preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         data = request.get_json()
         user_id = data["userId"]
         dll_name = data.get("dllName", "application")
+        path = Constants.cloud_folder_path(current_user, preference_user)
         assembly_name = data.get("ASSEMBLY_NAME", None)
         unsafe_code = data.get("UNSAFE_CODE", False)
         necessary_dlls = data.get("NECESSARY_DLLS", None)
@@ -62,8 +68,10 @@ class BuildResource(Resource):
                 "command": "build"
                 , "userId": user_id
                 , "dllName": dll_name
+                , "path": path
                 , "ASSEMBLY_NAME": assembly_name
                 , "UNSAFE_CODE": unsafe_code
                 , "NECESSARY_DLLS": necessary_dlls
+
             }))
         return HTTPStatus.OK
