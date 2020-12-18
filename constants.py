@@ -28,6 +28,8 @@ class Constants:
     @staticmethod
     def cloud_preference_folder_path(user):
         return "Cloud\\Preference_user_" + str(user.id) + "\\"
+
+
     """
     Hosts
     """

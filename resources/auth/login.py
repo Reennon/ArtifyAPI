@@ -15,7 +15,7 @@ from models.preference_script import Preference_script
 from models.preference_user import Preference_user
 from models.preferene_module import Preference_module
 from models.user import User
-
+from models.script import Script
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -52,7 +52,7 @@ def login():
         old_current = Curent_user_preference.query.filter_by(preference_user_id=user_preference_user.id,
                                                              current_user_preference=True).first()
         old_current.current_user_preference = False
-        current_preference.current_user_preference=True
+
         print(f" preference_user  {user_preference_user.id}\n"
               f" preference_user  {preference_name}")
         if current_preference is None:
@@ -68,6 +68,7 @@ def login():
                                                             preference_id=new_preference.id)
 
             db.session.add(current_preference)
+        current_preference.current_user_preference = True
         print(f" preference_user  {user_preference_user.id}\n"
               f" preference_user  {current_preference.name}")
         db.session.commit()
@@ -85,7 +86,7 @@ def login():
         shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
 
     for preference_script in user_Preference_script:
-        module = Module.query.filter_by(id=preference_script.module_id).first()
+        script = Script.query.filter_by(id=preference_script.script_id).first()
         print("DOWNLOAD >>>", module.file_name)
-        shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
+        shutil.copy(script.file_name, Constants.SCRIPT_FOLDER_PATH)
     return f"hello {user.username}, welcome on {preference_name}"

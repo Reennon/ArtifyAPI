@@ -81,6 +81,7 @@ def register_resource(api):
     from resources.upload_module_resource import UploadModuleResource
     from resources.build_resource import BuildResource
     from resources.load_preference import LoadPreferenceResource
+    from  resources.upload_preference import UpLoadPreferenceResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
     api.add_resource(UploadScriptResource, "/script")  # script upload routes
@@ -91,7 +92,8 @@ def register_resource(api):
     api.add_resource(UploadModuleResource, "/module")
     api.add_resource(ErrorResource, "/error/<int:id>")
     api.add_resource(SwitchPreference, "/switch")
-    api.add_resource(LoadPreferenceResource, "/load")
+    api.add_resource(LoadPreferenceResource, "/preference")
+    api.add_resource(UpLoadPreferenceResource,"/upload_preference/<string:name>")
 
 def import_bluprint_resource():
     from resources.auth.login import login

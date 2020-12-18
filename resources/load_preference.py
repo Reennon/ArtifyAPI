@@ -6,20 +6,21 @@ from flask import request, flash
 from flask_login import current_user
 from flask_restful import Resource
 
-
-
-from app import db
 from constants import Constants
 from models.curent_preference import Curent_user_preference
-from models.preference import Preference
-from models.preference_script import Preference_script
 from models.preference_user import Preference_user
-from models.script import Script
 from utils.utils import Utils
 
 
 class LoadPreferenceResource(Resource):
-
+    def get(self):
+        preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
+        user_preferences = Curent_user_preference.query.filter_by(preference_user_id=preference_user.id)
+        print(user_preferences)
+        preferences = [preference.name for preference in user_preferences]
+        return {
+            "preferences": preferences
+        }
 
     def post(self):
         """
@@ -50,19 +51,19 @@ class LoadPreferenceResource(Resource):
         if os.path.exists(path_f):
             os.remove(path_f)
         name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), name)
-        if os.path.exists(name_path) :
+        if os.path.exists(name_path):
             shutil.rmtree(name_path)
         print("Create")
+
         file.save(path_f)
 
-        Utils.unzip_folder(path_f,name=name_path)
+        Utils.unzip_folder(path_f, name=name_path)
         shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
         print("delete")
         if os.path.exists(path_f):
             os.remove(path_f)
         if os.path.exists(name_path):
             shutil.rmtree(os.path.join("Buffer\\Preference_user_" + str(current_user.id), name))
-
 
         """
 
