@@ -15,7 +15,8 @@ from models.preference_user import Preference_user
 from models.preferene_module import Preference_module
 from models.script import Script
 from utils.utils import Utils
-
+from models.preference_resources import Preference_resource
+from models.resources import Resources
 
 class LoadPreferenceResource(Resource):
     def get(self):
@@ -59,15 +60,23 @@ class LoadPreferenceResource(Resource):
         if os.path.exists(name_path):
             shutil.rmtree(name_path)
         print("Create")
+
+        Utils.check_cloud_folder_structure(current_user, curent_preference)
+
         file.save(path_f)
         Utils.unzip_folder(path_f, name=name_path)
         files = shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
         print(files)
         script_path = Constants.cloud_script_folder_path(current_user, curent_preference)
         module_path = Constants.cloud_module_folder_path(current_user, curent_preference)
+        resource_path = Constants.cloud_resource_folder_path(current_user, curent_preference)
         modules = [f for f in os.listdir(module_path)]
         scrptes = [f for f in os.listdir(script_path)]
+        resources = [f for f in os.listdir(resource_path)]
         print(scrptes)
+
+
+
         for script_name in scrptes:
             print(script_path + script_name)
             if Script.query.filter_by(file_name=script_path + script_name).first() is None:
@@ -91,6 +100,18 @@ class LoadPreferenceResource(Resource):
                                                       preference_id=curent_preference.preference_id)
                 db.session.add(preference_module)
                 print(f"NEW MODULE {module_name}")
+                db.session.commit()
+        for resources_name in resources:
+            print(resource_path + resources_name)
+            if Resources.query.filter_by(file_name=resource_path + resources_name).first() is None:
+                resource = Resources(
+                    file_name=str(Constants.cloud_resource_folder_path(current_user, curent_preference) + resources_name))
+                db.session.add(resource)
+                db.session.commit()
+                preference_resource = Preference_resource(resource_id=resource.id,
+                                                        preference_id=curent_preference.preference_id)
+                db.session.add(preference_resource)
+                print(f"NEW SCRIPT {resources_name}")
                 db.session.commit()
         if os.path.exists(path_f):
             os.remove(path_f)

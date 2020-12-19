@@ -7,7 +7,7 @@ from flask_restful import Resource
 from constants import Constants
 from models.preference_user import Preference_user
 from utils.socket_connect import SocketConnection
-
+from models.curent_preference import Curent_user_preference
 
 class BuildResource(Resource):
     """
@@ -54,10 +54,11 @@ class BuildResource(Resource):
 
         """
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
+        current_preference = Curent_user_preference(preference_user_id=preference_user.id, current_user_preference=True)
         data = request.get_json()
         user_id = data["userId"]
         dll_name = data.get("dllName", "application")
-        path = Constants.cloud_folder_path(current_user, preference_user)
+        path = Constants.cloud_folder_path(current_user, current_preference)
         assembly_name = data.get("ASSEMBLY_NAME", None)
         unsafe_code = data.get("UNSAFE_CODE", False)
         necessary_dlls = data.get("NECESSARY_DLLS", None)

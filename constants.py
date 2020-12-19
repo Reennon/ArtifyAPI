@@ -12,8 +12,10 @@ class Constants:
     PHOTO_FOLDER_PATH = r'data-storage/Photo'
     SCRIPT_FOLDER_PATH = 'Preference\\Scripts\\'
     MODULE_FOLDER_PATH = 'Preference\\Modules\\'
+    RESOURCE_FOLDER_PATH = 'Preference\\Resources\\'
     CLOUD_SCRIPT_FOLDER_PATH = 'Cloud\\Scripts\\'
     CLOUD_MODULE_FOLDER_PATH = 'Cloud\\Modules\\'
+    CLOUD_MODULE_FOLDER_PATH = 'Cloud\\Resources\\'
     @staticmethod
     def cloud_module_folder_path(user, preference):
         return "Cloud\\Preference_user_"+str(user.id)+"\\"+str(preference.name)+"\\Modules\\"
@@ -23,8 +25,13 @@ class Constants:
         return "Cloud\\Preference_user_" + str(user.id) + "\\" + str(preference.name) + "\\Scripts\\"
 
     @staticmethod
+    def cloud_resource_folder_path(user, preference):
+        return "Cloud\\Preference_user_" + str(user.id) + "\\" + str(preference.name) + "\\Resources\\"
+
+    @staticmethod
     def cloud_folder_path(user, preference):
         return "Cloud\\Preference_user_" + str(user.id) + "\\" + str(preference.name) + "\\"
+
     @staticmethod
     def cloud_preference_folder_path(user):
         return "Cloud\\Preference_user_" + str(user.id) + "\\"

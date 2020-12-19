@@ -14,6 +14,7 @@ from models.preference import Preference
 from models.preference_script import Preference_script
 from models.preference_user import Preference_user
 from models.preferene_module import Preference_module
+from models.preference_resources import Preference_resource
 from models.user import User
 from models.script import Script
 
@@ -75,10 +76,15 @@ def login():
     user_preference = Preference.query.filter_by(id=current_preference.preference_id).first()
 
     user_Preference_modules = Preference_module.query.filter_by(preference_id=user_preference.id)
-
+    user_Preference_resource = Preference_resource.query.filter_by(preference_id=user_preference.id)
     user_Preference_script = Preference_script.query.filter_by(preference_id=user_preference.id)
 
     login_user(user)
+
+    for preference_module in user_Preference_modules:
+        module = Module.query.filter_by(id=preference_module.module_id).first()
+        print("DOWNLOAD >>>", module.file_name)
+        shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
 
     for preference_module in user_Preference_modules:
         module = Module.query.filter_by(id=preference_module.module_id).first()
