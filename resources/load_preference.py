@@ -65,6 +65,8 @@ class LoadPreferenceResource(Resource):
 
         file.save(path_f)
         Utils.unzip_folder(path_f, name=name_path)
+        if os.path.exists("Buffer\\Preference_user_" + str(current_user.id)+"\\preference"):
+            os.rename("Buffer\\Preference_user_" + str(current_user.id)+"\\preference", "Buffer\\Preference_user_" + str(current_user.id)+f"\\{curent_preference.name}")
         files = shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
         print(files)
         script_path = Constants.cloud_script_folder_path(current_user, curent_preference)

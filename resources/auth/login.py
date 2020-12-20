@@ -15,6 +15,7 @@ from models.preference_script import Preference_script
 from models.preference_user import Preference_user
 from models.preferene_module import Preference_module
 from models.preference_resources import Preference_resource
+from models.resources import Resources
 from models.user import User
 from models.script import Script
 
@@ -86,13 +87,13 @@ def login():
         print("DOWNLOAD >>>", module.file_name)
         shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
 
-    for preference_module in user_Preference_modules:
-        module = Module.query.filter_by(id=preference_module.module_id).first()
-        print("DOWNLOAD >>>", module.file_name)
-        shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
+    for preference_resource in user_Preference_resource:
+        res = Resources.query.filter_by(id=preference_resource.resource_id).first()
+        print("DOWNLOAD >>>", res.file_name)
+        shutil.copy(res.file_name, Constants.RESOURCE_FOLDER_PATH)
 
     for preference_script in user_Preference_script:
         script = Script.query.filter_by(id=preference_script.script_id).first()
-        print("DOWNLOAD >>>", module.file_name)
+        print("DOWNLOAD >>>", script.file_name)
         shutil.copy(script.file_name, Constants.SCRIPT_FOLDER_PATH)
     return f"hello {user.username}, welcome on {preference_name}"
