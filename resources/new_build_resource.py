@@ -6,8 +6,8 @@ from flask_restful import Resource
 
 class NewBuildResource(Resource):
 
-    def post(self):
-        data = request.get_json()
-        path = data["path"]
-        print(path)
+    def post(self,id):
+        data = request.get_data()
+        path = str(data)
+        print(f"for user with id {id}", str(path))
         return HTTPStatus.OK

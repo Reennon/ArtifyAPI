@@ -18,5 +18,7 @@ class RunBuildResource(Resource):
         Returns:
              Http status OK
         """
+
         SocketConnection.socket_send(str({"command": "run_build"}))
+
         return HTTPStatus.OK
