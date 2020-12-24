@@ -6,6 +6,14 @@ from auth.auth import auth
 @auth.route('/logout')
 @login_required
 def logout():
+    """
+    GET method
+
+    Logout user from API and DELETE all files from locals folder
+
+    Returns:
+        response OK 200
+    """
     if current_user.username == 'user':
         return "you are a standard user"
     name = current_user.username

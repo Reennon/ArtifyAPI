@@ -22,20 +22,28 @@ from models.script import Script
 @auth.route('/login', methods=['POST'])
 def login():
     """
-    {
+    POST method
 
-        "password":"stepan",
-        "email":"step@step.com"
+    Point:
+        Logging in user and manage his folders on cloud to local
 
-    }
+    Args:
+        request body (json):
+                            {
+                                "preference_name":"Artify",
+                                "password":"s",
+                                "email":"s@s.com"
+                            }
 
     Returns:
+        string: <hello {username}, welcome on {preference_name}>
+        response OK 200
 
     """
     data = request.get_json()
     password = data['password']
     email = data['email']
-    preference_name = data['PrefName']
+    preference_name = data['preference_name']
 
     user = User.query.filter_by(email=email).first()
 

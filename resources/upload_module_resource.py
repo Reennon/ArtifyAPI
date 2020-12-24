@@ -24,10 +24,9 @@ class UploadModuleResource(Resource):
     def post(self):
         """
         Args:
-            file from request (flask.request.files['file']): script which send user
+            file from request (flask.request.files['file']): module which send user
 
-        func set file by request and save it on server in folder 'data-storage/Script/' and
-        send Core message with name of script.
+        func set file by request and save it on server in Cloud.
 
         Returns:
             200 OK

@@ -29,12 +29,12 @@ class LoadPreferenceResource(Resource):
         }
 
     def post(self):
-        """
-        Args:
-            file from request (flask.request.files['file']): script which send user
+        """POST method
+            func set file by request and save it on Buffer then unzipped it
+            and synchronization new and update files and
 
-        func set file by request and save it on server in folder 'data-storage/Script/' and
-        send Core message with name of script.
+        Args:
+            file from request (flask.request.files['file']): Zipped preference  which send user
 
         Returns:
             200 OK

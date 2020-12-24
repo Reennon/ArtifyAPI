@@ -11,14 +11,19 @@ from models.user import User
 
 @auth.route('/signup', methods={'POST'})
 def signup():
-    """
+    """ POST method
+            request for creating user on DataBase
 
-    {
-        "username":"stepan",
-        "password":"stepan",
-        "email":"step@step.com"
-    }
-
+    Args:
+        request body (json):
+                            {
+                                "username":"soft",      // User name
+                                "password":"soft",      // User password
+                                "email":"Artify@Artify.com"     // User E-mail
+                            }
+    Returns:
+        string: <hello {username}>
+        response OK 200
     """
 
     data = request.get_json()

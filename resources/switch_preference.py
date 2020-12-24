@@ -15,9 +15,20 @@ from models.preferene_module import Preference_module
 from models.script import Script
 from models.preference_resources import Preference_resource
 from models.resources import Resources
+
+
 class SwitchPreference(Resource):
 
     def post(self):
+        """
+        Args:
+            request body (json):
+                                {
+                                    "name":"Artify" // Preference name which user want switched
+                                }
+        Returns:
+            Http response OK 200
+        """
         data = request.get_json()
         preference_name = data['name']
         user_preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()

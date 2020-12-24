@@ -23,7 +23,15 @@ class UploadResource(Resource):
 
 
     def post(self):
+        """
+                Args:
+                    file from request (flask.request.files['file']): resource which send user
 
+                func set file by request and save it on server in Cloud.
+
+                Returns:
+                    200 OK
+                """
         file = request.files['file']
         if not file.filename:
             return flash("None selected resource")

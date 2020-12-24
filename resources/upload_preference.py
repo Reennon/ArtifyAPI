@@ -15,6 +15,16 @@ from utils.utils import Utils
 
 class UpLoadPreferenceResource(Resource):
     def get(self,name):
+        """GET method send user his preference by preference nme
+
+        Args:
+            name (string): Name of user preference which user want download
+
+        Returns:
+            zipped preference file
+            http response OK 200
+
+        """
         if not os.path.exists("Buffer"):
             os.mkdir("Buffer")
         if not os.path.exists("Buffer\\Preference_user_" + str(current_user.id)):
