@@ -34,6 +34,7 @@ class UploadScriptResource(Resource):
         """
 
         file = request.files['file']
+        file2 = request.files['file'][1]
         if not file.filename:
             return flash("None selected script")
         if not Utils.allowed_script_type(filename=file.filename):

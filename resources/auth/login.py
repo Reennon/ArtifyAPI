@@ -1,5 +1,6 @@
 import shutil
 from http import HTTPStatus
+from importlib.resources import Resource
 
 from flask import flash
 from flask import request
@@ -15,7 +16,6 @@ from models.preference_script import Preference_script
 from models.preference_user import Preference_user
 from models.preferene_module import Preference_module
 from models.preference_resources import Preference_resource
-from models.resources import Resources
 from models.user import User
 from models.script import Script
 
@@ -26,7 +26,7 @@ def login():
 
         "password":"stepan",
         "email":"step@step.com"
-
+        "PrefName": ""
     }
 
     Returns:
@@ -87,10 +87,10 @@ def login():
         print("DOWNLOAD >>>", module.file_name)
         shutil.copy(module.file_name, Constants.MODULE_FOLDER_PATH)
 
-    for preference_resource in user_Preference_resource:
-        res = Resources.query.filter_by(id=preference_resource.resource_id).first()
-        print("DOWNLOAD >>>", res.file_name)
-        shutil.copy(res.file_name, Constants.RESOURCE_FOLDER_PATH)
+    for preference_resource in user_Preference_modules:
+        resource = Resource.query.filter_by(id=preference_resource.resource_id).first()
+        print("DOWNLOAD >>>", resource.file_name)
+        shutil.copy(resource.file_name, Constants.RESOURCE_FOLDER_PATH)
 
     for preference_script in user_Preference_script:
         script = Script.query.filter_by(id=preference_script.script_id).first()

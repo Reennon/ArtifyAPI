@@ -53,21 +53,25 @@ class LoadPreferenceResource(Resource):
         name = file.filename.split('.')[0]
         if not os.path.exists("Buffer\\Preference_user_" + str(current_user.id)):
             os.mkdir("Buffer\\Preference_user_" + str(current_user.id))
-        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), file.filename)
+        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), f"{curent_preference.name}.zip")
         if os.path.exists(path_f):
             os.remove(path_f)
-        name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), name)
+        name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), curent_preference.name)
         if os.path.exists(name_path):
             shutil.rmtree(name_path)
         print("Create")
 
         Utils.check_cloud_folder_structure(current_user, curent_preference)
 
+        sha = curent_preference.name# file.filename[:-4]
         file.save(path_f)
         Utils.unzip_folder(path_f, name=name_path)
-        if os.path.exists("Buffer\\Preference_user_" + str(current_user.id)+"\\preference"):
-            os.rename("Buffer\\Preference_user_" + str(current_user.id)+"\\preference", "Buffer\\Preference_user_" + str(current_user.id)+f"\\{curent_preference.name}")
+
+        os.rename(f"Buffer\\Preference_user_{str(current_user.id)}\\{sha}\\preference",
+                  f"Buffer\\Preference_user_{str(current_user.id)}\\{sha}\\{curent_preference.name}")
+
         files = shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
+
         print(files)
         script_path = Constants.cloud_script_folder_path(current_user, curent_preference)
         module_path = Constants.cloud_module_folder_path(current_user, curent_preference)
@@ -118,8 +122,8 @@ class LoadPreferenceResource(Resource):
         if os.path.exists(path_f):
             os.remove(path_f)
         if os.path.exists(name_path):
-            shutil.rmtree(os.path.join("Buffer\\Preference_user_" + str(current_user.id), name))
+            shutil.rmtree(os.path.join("Buffer\\Preference_user_" + str(current_user.id), curent_preference.name))
         print("delete")
 
 
-        return HTTPStatus.OK
+        return 200
