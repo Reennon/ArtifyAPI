@@ -16,4 +16,4 @@ class SmokeResorces(Resource):
         Returns (str): Test message "Hello"
         """
 
-        return f'{current_user.username}', HTTPStatus.OK
+        return 200, HTTPStatus.OK

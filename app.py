@@ -1,35 +1,30 @@
-
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user
-from resources.smoke_resource import SmokeResorces
-from resources.upload_photo_resource import UploadPhotoResource
+from flask_cors import CORS
 
-from resources.run_build_resource import RunBuildResource
-from resources.update_executable_resource import UpdateExecutableResource
-from resources.new_build_resource import NewBuildResource
-from resources.error_resource import ErrorResource
 
 APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
 db = SQLAlchemy()
 migrate = Migrate()
+cors = CORS()
 
 
 def create_app(config=None):
     """
-    fuction build app
+    build app function
 
-    args:
+    Args:
         config (flask.Config): config: API start configuration
     Returns:
          app (Flask): application
     """
 
     app = Flask(APP_NAME)
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost:5432/artify_db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mssql+pyodbc://Pegasus/ArtifyDB?driver=SQL+Server?trusted_connection=yes"
     app.config['SECRET_KEY'] = 'stepan'
     api = Api(app, prefix=APP_PREFIX)
     app.config.from_object(config)
@@ -57,16 +52,17 @@ def create_app(config=None):
 
     app.logger_name = APP_NAME
     from auth.auth import auth as auth_blueprint
-    import_bluprint_resource()
     app.register_blueprint(auth_blueprint)
 
     register_resource(api)
+    setup_origins_cors(api)
 
     @app.before_request
     def before_request_auth():
         if not current_user.is_authenticated:
             user = User.query.filter_by(email="user").first()
             login_user(user)
+
     return app
 
 
@@ -85,6 +81,14 @@ def register_resource(api):
     from resources.load_preference import LoadPreferenceResource
     from resources.upload_preference import UpLoadPreferenceResource
     from resources.upload_resource import UploadResource
+    from resources.new_build_resource import NewBuildResource
+    from resources.smoke_resource import SmokeResorces
+    from resources.upload_photo_resource import UploadPhotoResource
+
+    from resources.run_build_resource import RunBuildResource
+    from resources.update_executable_resource import UpdateExecutableResource
+
+    from resources.error_resource import ErrorResource
 
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
@@ -97,9 +101,21 @@ def register_resource(api):
     api.add_resource(ErrorResource, "/error/<int:id>")
     api.add_resource(SwitchPreference, "/switch")
     api.add_resource(LoadPreferenceResource, "/preference")
-    api.add_resource(UpLoadPreferenceResource,"/upload_preference/<string:name>")
-    api.add_resource(UploadResource,"/resources")
-def import_bluprint_resource():
-    from resources.auth.login import login
-    from resources.auth.signup import signup
-    from resources.auth.logout import logout
+    api.add_resource(UpLoadPreferenceResource, "/upload_preference/<string:name>")
+    api.add_resource(UploadResource, "/resources")
+
+
+def setup_origins_cors(api):
+    """
+    Setups cors origins from consts
+    Args:
+        api:
+
+    Returns:
+        None:
+    """
+    from constants import Constants as Const
+    CORS(api, origins=[Const.CORS_ORIGINS])
+
+
+
