@@ -17,7 +17,7 @@ from models.script import Script
 from utils.utils import Utils
 from models.preference_resources import Preference_resource
 from models.resources import Resources
-
+from utils.files import Files
 class LoadPreferenceResource(Resource):
     def get(self):
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
@@ -48,73 +48,22 @@ class LoadPreferenceResource(Resource):
         user_preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         curent_preference = Curent_user_preference.query.filter_by(preference_user_id=user_preference_user.id,
                                                                    current_user_preference=True).first()
-        if not os.path.exists("Buffer"):
-            os.mkdir("Buffer")
         name = file.filename.split('.')[0]
-        if not os.path.exists("Buffer\\Preference_user_" + str(current_user.id)):
-            os.mkdir("Buffer\\Preference_user_" + str(current_user.id))
-        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), file.filename)
-        if os.path.exists(path_f):
-            os.remove(path_f)
         name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), name)
-        if os.path.exists(name_path):
-            shutil.rmtree(name_path)
+        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), file.filename)
+        Files.check_buffer(current_user,file.filename,name)
         print("Create")
 
         Utils.check_cloud_folder_structure(current_user, curent_preference)
 
         file.save(path_f)
+
         Utils.unzip_folder(path_f, name=name_path)
-        if os.path.exists("Buffer\\Preference_user_" + str(current_user.id)+"\\preference"):
-            os.rename("Buffer\\Preference_user_" + str(current_user.id)+"\\preference", "Buffer\\Preference_user_" + str(current_user.id)+f"\\{curent_preference.name}")
-        files = shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
-        print(files)
-        script_path = Constants.cloud_script_folder_path(current_user, curent_preference)
-        module_path = Constants.cloud_module_folder_path(current_user, curent_preference)
-        resource_path = Constants.cloud_resource_folder_path(current_user, curent_preference)
-        modules = [f for f in os.listdir(module_path)]
-        scrptes = [f for f in os.listdir(script_path)]
-        resources = [f for f in os.listdir(resource_path)]
-        print(scrptes)
+
+        Files.Upload_to_cloud(current_user, curent_preference,db,name_path)
 
 
 
-        for script_name in scrptes:
-            print(script_path + script_name)
-            if Script.query.filter_by(file_name=script_path + script_name).first() is None:
-                script = Script(
-                    file_name=str(Constants.cloud_script_folder_path(current_user, curent_preference) + script_name))
-                db.session.add(script)
-                db.session.commit()
-                preference_scripte = Preference_script(script_id=script.id,
-                                                       preference_id=curent_preference.preference_id)
-                db.session.add(preference_scripte)
-                print(f"NEW SCRIPT {script_name}")
-                db.session.commit()
-        for module_name in modules:
-            print(module_path + module_name)
-            if Module.query.filter_by(file_name=module_path + module_name).first() is None:
-                module = Module(
-                    file_name=str(Constants.cloud_module_folder_path(current_user, curent_preference) + module_name))
-                db.session.add(module)
-                db.session.commit()
-                preference_module = Preference_module(module_id=module.id,
-                                                      preference_id=curent_preference.preference_id)
-                db.session.add(preference_module)
-                print(f"NEW MODULE {module_name}")
-                db.session.commit()
-        for resources_name in resources:
-            print(resource_path + resources_name)
-            if Resources.query.filter_by(file_name=resource_path + resources_name).first() is None:
-                resource = Resources(
-                    file_name=str(Constants.cloud_resource_folder_path(current_user, curent_preference) + resources_name))
-                db.session.add(resource)
-                db.session.commit()
-                preference_resource = Preference_resource(resource_id=resource.id,
-                                                        preference_id=curent_preference.preference_id)
-                db.session.add(preference_resource)
-                print(f"NEW SCRIPT {resources_name}")
-                db.session.commit()
         if os.path.exists(path_f):
             os.remove(path_f)
         if os.path.exists(name_path):

@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user
-from resources.smoke_resource import SmokeResorces
+
 from resources.upload_photo_resource import UploadPhotoResource
 
 from resources.run_build_resource import RunBuildResource
@@ -85,6 +85,7 @@ def register_resource(api):
     from resources.load_preference import LoadPreferenceResource
     from resources.upload_preference import UpLoadPreferenceResource
     from resources.upload_resource import UploadResource
+    from resources.smoke_resource import SmokeResorces
 
     api.add_resource(SmokeResorces, "/smoke")  # test rotes
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
