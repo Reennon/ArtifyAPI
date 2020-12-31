@@ -4,6 +4,7 @@ import zipfile
 from constants import Constants
 
 
+
 class Utils:
     @staticmethod
     def allowed_photo_type(filename):
@@ -47,15 +48,3 @@ class Utils:
         os.mkdir(name)
         zip.extractall(path=name)
 
-    @staticmethod
-    def check_cloud_folder_structure(current_user, curent_preference):
-        if not os.path.exists(Constants.cloud_preference_folder_path(current_user)):
-            os.mkdir(Constants.cloud_preference_folder_path(current_user))
-        if not os.path.exists(Constants.cloud_folder_path(current_user,curent_preference)):
-            os.mkdir(Constants.cloud_folder_path(current_user,curent_preference))
-        if not os.path.exists(Constants.cloud_resource_folder_path(current_user, curent_preference)):
-            os.mkdir(Constants.cloud_resource_folder_path(current_user, curent_preference))
-        if not os.path.exists(Constants.cloud_module_folder_path(current_user, curent_preference)):
-            os.mkdir(Constants.cloud_module_folder_path(current_user, curent_preference))
-        if not os.path.exists(Constants.cloud_script_folder_path(current_user, curent_preference)):
-            os.mkdir(Constants.cloud_script_folder_path(current_user, curent_preference))

@@ -16,9 +16,10 @@ class ModuleResource(Resource):
     """
 
     def get(self):
-        """
-        send core select module
+        """GET method Send core select module
 
+            Args:
+                request body (json): path to the module from user
         """
         data = request.get_json()
         if data is None:
