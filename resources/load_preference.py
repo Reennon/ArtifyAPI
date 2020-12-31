@@ -9,15 +9,11 @@ from flask_restful import Resource
 from app import db
 from constants import Constants
 from models.curent_preference import Curent_user_preference
-from models.module import Module
-from models.preference_script import Preference_script
 from models.preference_user import Preference_user
-from models.preferene_module import Preference_module
-from models.script import Script
-from utils.utils import Utils
-from models.preference_resources import Preference_resource
-from models.resources import Resources
 from utils.files import Files
+from utils.utils import Utils
+
+
 class LoadPreferenceResource(Resource):
     def get(self):
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
@@ -49,26 +45,21 @@ class LoadPreferenceResource(Resource):
         curent_preference = Curent_user_preference.query.filter_by(preference_user_id=user_preference_user.id,
                                                                    current_user_preference=True).first()
         name = file.filename.split('.')[0]
-        name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), name)
-        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), file.filename)
-        Files.check_buffer(current_user,file.filename,name)
-        print("Create")
-
-        Utils.check_cloud_folder_structure(current_user, curent_preference)
+        name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), os.path.join(curent_preference.name))
+        path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id),  curent_preference.name+".zip")
+        Files.check_buffer(current_user, curent_preference.name, name)
+        Files.check_cloud_folder_structure(current_user, curent_preference)
 
         file.save(path_f)
-
         Utils.unzip_folder(path_f, name=name_path)
+        Files.Upload_to_cloud(current_user, curent_preference, db, os.path.join(name_path, name))
 
-        Files.Upload_to_cloud(current_user, curent_preference,db,name_path)
-
-
+        shutil.copytree(Constants.cloud_folder_path(current_user, curent_preference), Constants.PREFERENCE_PATH,
+                        dirs_exist_ok=True)
 
         if os.path.exists(path_f):
             os.remove(path_f)
         if os.path.exists(name_path):
-            shutil.rmtree(os.path.join("Buffer\\Preference_user_" + str(current_user.id), name))
-        print("delete")
-
+            shutil.rmtree(os.path.join("Buffer\\Preference_user_" + str(current_user.id)))
 
         return HTTPStatus.OK

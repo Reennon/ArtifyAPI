@@ -36,13 +36,9 @@ def create_app(config=None):
     db.init_app(app)
 
     from models.preference import Preference
-    from models.preference_script import Preference_script
-    from models.preferene_module import Preference_module
-    from models.module import Module
-    from models.script import Script
     from models.curent_preference import Curent_user_preference
-    from models.preference_resources import Preference_resource
-    from models.resources import Resources
+    from models.file import File
+    from models.preference_file import Preference_file
     from models.user import User
     from models.preference_user import Preference_user
 

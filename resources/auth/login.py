@@ -1,24 +1,16 @@
-import shutil
 from http import HTTPStatus
 
 from flask import flash
 from flask import request
-from flask_login import login_user, current_user, logout_user
+from flask_login import current_user, logout_user
 from werkzeug.security import check_password_hash
+
 from app import db
 from auth.auth import auth
-from constants import Constants
-from models.curent_preference import Curent_user_preference
-from models.module import Module
-from models.preference import Preference
-from models.preference_script import Preference_script
-from models.preference_user import Preference_user
-from models.preferene_module import Preference_module
-from models.preference_resources import Preference_resource
-from models.resources import Resources
 from models.user import User
-from models.script import Script
 from utils.files import Files
+
+
 @auth.route('/login', methods=['POST'])
 def login():
     """
@@ -44,7 +36,7 @@ def login():
     password = data['password']
     email = data['email']
     preference_name = data['preference_name']
-
+    Files.check_preference()
     user = User.query.filter_by(email=email).first()
 
     if not user and not check_password_hash(user.password, password):

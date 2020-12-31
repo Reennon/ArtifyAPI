@@ -5,14 +5,10 @@ from flask_login import login_user
 
 from constants import Constants
 from models.curent_preference import Curent_user_preference
-from models.module import Module
+from models.file import File
 from models.preference import Preference
-from models.preference_resources import Preference_resource
-from models.preference_script import Preference_script
+from models.preference_file import Preference_file
 from models.preference_user import Preference_user
-from models.preferene_module import Preference_module
-from models.resources import Resources
-from models.script import Script
 
 
 class Files:
@@ -43,6 +39,7 @@ class Files:
     def prepear_to_login(user, preference_name, db):
 
         user_preference_user = Preference_user.query.filter_by(user_id=user.id).first()
+
         if preference_name is None:
             current_preference = Curent_user_preference.query.filter_by(preference_user_id=user_preference_user.id,
                                                                         current_user_preference=True).first()
@@ -70,22 +67,22 @@ class Files:
                   f" preference_user  {current_preference.name}")
             db.session.commit()
         login_user(user)
+        Files.check_cloud_folder(user,current_preference )
         shutil.copytree(Files.get_full_path(Constants.cloud_folder_path(user, current_preference)),
                         Constants.PREFERENCE_PATH, dirs_exist_ok=True)
 
     @staticmethod
-    def prepear_to_logout():
-        module_location = "...\\..\\Preference\\Modules\\"
-        script_location = "...\\..\\Preference\\Scripts\\"
-        moddules = os.listdir(os.path.abspath("...\\..\\Preference\\Modules"))
-        scripts = os.listdir(os.path.abspath("...\\..\\Preference\\Scripts"))
-        for script in scripts:
-            print("DELETE", script_location + script)
-            os.remove(script_location + script)
+    def get_all_files_from_db_by_user_preference(preference_id):
+        pref_files = Preference_file.query.filter_by(preference_id=preference_id)
 
-        for module in moddules:
-            print("DELETE", module_location + module)
-            os.remove(module_location + module)
+        all_files = [[file.file_name for file  in  File.query.filter_by(id= pref.file_id)] for pref in pref_files]
+
+        return all_files
+
+
+    @staticmethod
+    def prepear_to_logout():
+        shutil.rmtree(Constants.PREFERENCE_PATH)
 
     @staticmethod
     def check_buffer(current_user, filename, name):
@@ -95,7 +92,7 @@ class Files:
             os.mkdir("Buffer\\Preference_user_" + str(current_user.id))
         path_f = os.path.join("Buffer\\Preference_user_" + str(current_user.id), filename)
         if os.path.exists(path_f):
-            os.remove(path_f)
+            shutil.rmtree(path_f)
         name_path = os.path.join("Buffer\\Preference_user_" + str(current_user.id), name)
         if os.path.exists(name_path):
             shutil.rmtree(name_path)
@@ -105,55 +102,76 @@ class Files:
         if os.path.exists("Buffer\\Preference_user_" + str(current_user.id) + "\\preference"):
             os.rename("Buffer\\Preference_user_" + str(current_user.id) + "\\preference",
                       "Buffer\\Preference_user_" + str(current_user.id) + f"\\{curent_preference.name}")
-        shutil.copytree(name_path, Constants.cloud_preference_folder_path(current_user), dirs_exist_ok=True)
+        shutil.copytree(name_path, Constants.cloud_folder_path(current_user,curent_preference), dirs_exist_ok=True)
 
-        script_path = Constants.cloud_script_folder_path(current_user, curent_preference)
-        module_path = Constants.cloud_module_folder_path(current_user, curent_preference)
-        resource_path = Constants.cloud_resource_folder_path(current_user, curent_preference)
-        modules = [f for f in os.listdir(module_path)]
-        scrptes = [f for f in os.listdir(script_path)]
-        resources = [f for f in os.listdir(resource_path)]
-        print(scrptes)
+        all_files = Files.get_files_from_cloud(current_user, curent_preference)
 
-        for script_name in scrptes:
-            print(script_path + script_name)
-            if Script.query.filter_by(file_name=script_path + script_name).first() is None:
-                script = Script(
-                    file_name=str(Constants.cloud_script_folder_path(current_user, curent_preference) + script_name))
-                db.session.add(script)
+        for path in all_files:
+            if File.query.filter_by(file_name=path).first() is None:
+                file = File(file_name=path)
+                db.session.add(file)
                 db.session.commit()
-                preference_scripte = Preference_script(script_id=script.id,
+                preference_file = Preference_file(file_id=file.id,
                                                        preference_id=curent_preference.preference_id)
-                db.session.add(preference_scripte)
-                print(f"NEW SCRIPT {script_name}")
+                db.session.add(preference_file)
+                print(f"NEW File {path}")
                 db.session.commit()
-        for module_name in modules:
-            print(module_path + module_name)
-            if Module.query.filter_by(file_name=module_path + module_name).first() is None:
-                module = Module(
-                    file_name=str(Constants.cloud_module_folder_path(current_user, curent_preference) + module_name))
-                db.session.add(module)
-                db.session.commit()
-                preference_module = Preference_module(module_id=module.id,
-                                                      preference_id=curent_preference.preference_id)
-                db.session.add(preference_module)
-                print(f"NEW MODULE {module_name}")
-                db.session.commit()
-        for resources_name in resources:
-            print(resource_path + resources_name)
-            if Resources.query.filter_by(file_name=resource_path + resources_name).first() is None:
-                resource = Resources(
-                    file_name=str(
-                        Constants.cloud_resource_folder_path(current_user, curent_preference) + resources_name))
-                db.session.add(resource)
-                db.session.commit()
-                preference_resource = Preference_resource(resource_id=resource.id,
-                                                          preference_id=curent_preference.preference_id)
-                db.session.add(preference_resource)
-                print(f"NEW RESOURCE {resources_name}")
-                db.session.commit()
+            else:
+                print(f"Update File {path}")
+
 
     @staticmethod
-    def update_db(current_user, curent_preference):
+    def update_db(user,current_preference):
+        all_files = Files.get_all_files_from_db_by_user_preference(current_preference.preference_id)
+        db_files = [ str(file[0]).replace(Constants.cloud_folder_path(user,current_preference),"") for file in all_files]
 
-        pass
+        exist = [path.replace(Constants.cloud_folder_path(user,current_preference), "") for path in Files.get_files_from_cloud(user,current_preference)]
+        print(db_files)
+        print(exist)
+        not_exist = []
+        for file in exist:
+            if file in db_files:
+                db_files.remove(file)
+            else:
+                not_exist.append(file)
+
+
+
+    @staticmethod
+    def get_files_from_cloud(user,current_preference):
+        exist = []
+        for root, directories, files in os.walk(Constants.cloud_folder_path(user, current_preference), topdown=True):
+            for name in files:
+                exist.append(os.path.join(root, name))
+        return exist
+
+    @staticmethod
+    def check_cloud_folder_structure(current_user, curent_preference):
+        if not os.path.exists(Constants.cloud_preference_folder_path(current_user)):
+            os.mkdir(Constants.cloud_preference_folder_path(current_user))
+        if not os.path.exists(Constants.cloud_folder_path(current_user, curent_preference)):
+            os.mkdir(Constants.cloud_folder_path(current_user, curent_preference))
+        if not os.path.exists(Constants.cloud_resource_folder_path(current_user, curent_preference)):
+            os.mkdir(Constants.cloud_resource_folder_path(current_user, curent_preference))
+        if not os.path.exists(Constants.cloud_module_folder_path(current_user, curent_preference)):
+            os.mkdir(Constants.cloud_module_folder_path(current_user, curent_preference))
+        if not os.path.exists(Constants.cloud_script_folder_path(current_user, curent_preference)):
+            os.mkdir(Constants.cloud_script_folder_path(current_user, curent_preference))
+
+    @staticmethod
+    def check_preference():
+        if not os.path.exists("Preference"):
+            os.mkdir("Preference")
+            for dir in Files.standart_dir():
+                os.mkdir(f"Preference\\{dir}")
+    @staticmethod
+    def upload_file(current_user,curent_preference,filename,db):
+        if File.query.filter_by(file_name=str(
+                Constants.cloud_script_folder_path(current_user, curent_preference) + filename)).first() is None:
+            file = File(
+                file_name=str(Constants.cloud_script_folder_path(current_user, curent_preference) + filename))
+            db.session.add(file)
+            db.session.commit()
+            preference_file = Preference_file(file_id=file.id, preference_id=curent_preference.preference_id)
+            db.session.add(preference_file)
+            db.session.commit()

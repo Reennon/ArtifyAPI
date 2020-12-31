@@ -1,5 +1,5 @@
 from flask_login import logout_user, login_required, current_user
-import os
+
 from auth.auth import auth
 from utils.files import Files
 
@@ -17,7 +17,6 @@ def logout():
     if current_user.username == 'user':
         return "you are a standard user"
     name = current_user.username
-
     Files.prepear_to_logout()
     logout_user()
 
