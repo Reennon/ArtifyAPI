@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user
 
 from resources.upload_photo_resource import UploadPhotoResource
+from flask_cors import CORS
 
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
@@ -16,6 +17,7 @@ APP_NAME = "Artify"
 APP_PREFIX = "/Artify"
 db = SQLAlchemy()
 migrate = Migrate()
+cors = CORS()
 
 
 def create_app(config=None):
@@ -57,6 +59,7 @@ def create_app(config=None):
     app.register_blueprint(auth_blueprint)
 
     register_resource(api)
+    setup_origins_cors(app)
 
     @app.before_request
     def before_request_auth():
@@ -96,7 +99,21 @@ def register_resource(api):
     api.add_resource(LoadPreferenceResource, "/preference")
     api.add_resource(UpLoadPreferenceResource,"/upload_preference/<string:name>")
     api.add_resource(UploadResource,"/resources")
+
+
 def import_bluprint_resource():
     from resources.auth.login import login
     from resources.auth.signup import signup
     from resources.auth.logout import logout
+
+
+def setup_origins_cors(api):
+    """
+    Setups cors origins from consts
+    Args:
+        api:
+    Returns:
+        None:
+    """
+    from constants import Constants as Const
+    CORS(api, origins=[Const.CORS_ORIGINS])
