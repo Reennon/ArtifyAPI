@@ -17,5 +17,5 @@ def run(api):
 
 if __name__ == "__main__":
     api = app.create_app(DevConfig)
-    api.run(host="127.0.0.1", port=5000, debug=True)
+    api.run(host="localhost", port=4000, debug=True)
 

@@ -17,7 +17,7 @@ class Constants:
     CLOUD_SCRIPT_FOLDER_PATH = 'Cloud\\Scripts\\'
     CLOUD_MODULE_FOLDER_PATH = 'Cloud\\Modules\\'
     CLOUD_PATH = 'Cloud'
-    CORS_ORIGINS = r'"https://localhost:5001", "http://localhost:5000"'
+    CORS_ORIGINS = r"http://localhost:5000", r"https://localhost:5001"
 
     @staticmethod
     def cloud_module_folder_path(user, preference):
