@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Api
@@ -6,16 +5,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user
 
 from resources.upload_photo_resource import UploadPhotoResource
-
+from flask_cors import CORS
+from constants import Constants
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
 from resources.error_resource import ErrorResource
 
 APP_NAME = "Artify"
-APP_PREFIX = "/Artify"
+APP_PREFIX = "/artify"
 db = SQLAlchemy()
 migrate = Migrate()
+cors = CORS()
 
 
 def create_app(config=None):
@@ -29,8 +30,9 @@ def create_app(config=None):
     """
 
     app = Flask(APP_NAME)
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost:5432/artify_db"
-    app.config['SECRET_KEY'] = 'stepan'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = Constants.SQLALCHEMY_DATABASE_URI
+    app.config['SECRET_KEY'] = Constants.SECRET_KEY
     api = Api(app, prefix=APP_PREFIX)
     app.config.from_object(config)
     db.init_app(app)
@@ -57,12 +59,14 @@ def create_app(config=None):
     app.register_blueprint(auth_blueprint)
 
     register_resource(api)
+    setup_origins_cors(app)
 
     @app.before_request
     def before_request_auth():
         if not current_user.is_authenticated:
             user = User.query.filter_by(email="user").first()
             login_user(user)
+
     return app
 
 
@@ -82,21 +86,40 @@ def register_resource(api):
     from resources.upload_preference import UpLoadPreferenceResource
     from resources.upload_resource import UploadResource
     from resources.smoke_resource import SmokeResorces
+    from resources.get_folder_tree_resource import GetFolderTreeResource
 
-    api.add_resource(SmokeResorces, "/smoke")  # test rotes
-    api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes
-    api.add_resource(UploadScriptResource, "/script")  # script upload routes
-    api.add_resource(RunBuildResource, '/run')
-    api.add_resource(UpdateExecutableResource, '/update')
-    api.add_resource(NewBuildResource, '/new/<int:id>')
-    api.add_resource(BuildResource, '/build')
-    api.add_resource(UploadModuleResource, "/module")
-    api.add_resource(ErrorResource, "/error/<int:id>")
-    api.add_resource(SwitchPreference, "/switch")
-    api.add_resource(LoadPreferenceResource, "/preference")
-    api.add_resource(UpLoadPreferenceResource,"/upload_preference/<string:name>")
-    api.add_resource(UploadResource,"/resources")
+    api.add_resource(SmokeResorces, "/smoke")  # test rotes GET
+    api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes, POST
+    api.add_resource(UploadScriptResource, "/script")  # script upload routes, POST
+    api.add_resource(RunBuildResource, '/run')  # GET
+    api.add_resource(UpdateExecutableResource, '/update')  # POST
+    api.add_resource(NewBuildResource, '/new/<int:id>')  # POST
+    api.add_resource(BuildResource, '/build')  # GET, POST
+    api.add_resource(UploadModuleResource, "/module")  # POST
+    api.add_resource(ErrorResource, "/error/<int:id>")  # GET
+    api.add_resource(SwitchPreference, "/switch")  # POST
+    api.add_resource(LoadPreferenceResource, "/preference")  # GET, POST
+    api.add_resource(UpLoadPreferenceResource, "/upload_preference/<string:name>")  # GET
+    api.add_resource(UploadResource, "/resources")  # POST
+    api.add_resource(GetFolderTreeResource, "/tree")
+    # ('/login', methods=['POST'])
+    # ('/logout',methods=['GET, POST'])
+    # ('/signup', methods={'POST'})
+
+
 def import_bluprint_resource():
     from resources.auth.login import login
     from resources.auth.signup import signup
     from resources.auth.logout import logout
+
+
+def setup_origins_cors(api):
+    """
+    Setups cors origins from consts
+    Args:
+        api:
+    Returns:
+        None:
+    """
+    from constants import Constants as Const
+    CORS(api, origins=[r"http://localhost:5000", r"https://localhost:5001"])

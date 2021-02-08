@@ -9,7 +9,7 @@ from models.preference_user import Preference_user
 from models.user import User
 
 
-@auth.route('/signup', methods={'POST'})
+@auth.route('/artify/signup', methods=['POST'])
 def signup():
     """ POST method
             request for creating user on DataBase
