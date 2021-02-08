@@ -11,7 +11,7 @@ from models.user import User
 from utils.files import Files
 
 
-@auth.route('/login', methods=['POST'])
+@auth.route('/artify/login', methods=['POST'])
 def login():
     """
     POST method

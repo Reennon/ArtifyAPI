@@ -6,14 +6,14 @@ from flask_login import LoginManager, login_required, current_user, login_user
 
 from resources.upload_photo_resource import UploadPhotoResource
 from flask_cors import CORS
-
+from constants import Constants
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
 from resources.error_resource import ErrorResource
 
 APP_NAME = "Artify"
-APP_PREFIX = "/Artify"
+APP_PREFIX = "/artify"
 db = SQLAlchemy()
 migrate = Migrate()
 cors = CORS()
@@ -31,8 +31,8 @@ def create_app(config=None):
 
     app = Flask(APP_NAME)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost:5432/artify_db"
-    app.config['SECRET_KEY'] = 'stepan'
+    app.config['SQLALCHEMY_DATABASE_URI'] = Constants.SQLALCHEMY_DATABASE_URI
+    app.config['SECRET_KEY'] = Constants.SECRET_KEY
     api = Api(app, prefix=APP_PREFIX)
     app.config.from_object(config)
     db.init_app(app)

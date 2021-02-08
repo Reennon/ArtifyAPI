@@ -44,8 +44,15 @@ class Constants:
     Hosts
     """
     LOCALHOST = '127.0.0.1'
+    HOST = '127.0.0.1'
 
     """
     Ports
     """
     PORT_CORE = 50000
+
+    """
+    DATABASE
+    """
+    SQLALCHEMY_DATABASE_URI ="postgresql://postgres:1234@localhost:5432/artify_db"
+    SECRET_KEY ='stepan'

@@ -3,7 +3,7 @@ from flask_login import logout_user, login_required, current_user
 from auth.auth import auth
 from utils.files import Files
 
-@auth.route('/logout')
+@auth.route('/artify/logout')
 @login_required
 def logout():
     """
