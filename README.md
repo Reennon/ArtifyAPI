@@ -38,8 +38,8 @@ then update a requirements by execute setup.py, then
 pipenv update 
 ```
 and pipenv must automaticaly start installing all dependencies for project 
-then create a database and migrate
-after that add a data field to the "User" table by entering "user" for all attributes
+.Then create a database and migrate
+.After that add a data field to the "User" table by entering "user" for all attributes
 and finaly start a project app by command 
 ```
 python manage.py
