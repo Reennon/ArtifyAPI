@@ -19,3 +19,4 @@ if __name__ == "__main__":
     api = app.create_app(DevConfig)
     api.run(host=Constants.HOST, port=4000, debug=True)
 
+

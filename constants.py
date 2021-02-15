@@ -17,7 +17,7 @@ class Constants:
     CLOUD_SCRIPT_FOLDER_PATH = 'Cloud\\Scripts\\'
     CLOUD_MODULE_FOLDER_PATH = 'Cloud\\Modules\\'
     CLOUD_PATH = 'Cloud'
-    CORS_ORIGINS = r"http://localhost:5000", r"https://localhost:5001"
+    CORS_ORIGINS = r"http://localhost:5000", r"https://localhost:5001", r"http://192.168.0.104:5000"
 
     @staticmethod
     def cloud_module_folder_path(user, preference):
@@ -44,7 +44,7 @@ class Constants:
     Hosts
     """
     LOCALHOST = '127.0.0.1'
-    HOST = '127.0.0.1'
+    HOST = '192.168.0.103'
 
     """
     Ports
@@ -54,5 +54,5 @@ class Constants:
     """
     DATABASE
     """
-    SQLALCHEMY_DATABASE_URI ="postgresql://postgres:1234@localhost:5432/artify_db"
-    SECRET_KEY ='stepan'
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1@localhost:5432/artify_db"
+    SECRET_KEY = 'stepan'

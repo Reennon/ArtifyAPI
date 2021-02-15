@@ -57,4 +57,4 @@ class LoginResource(Resource):
 
         token = Files.prepear_to_login(user, preference_name, db)
 
-        return token
+        return f'Bearer {token}'
