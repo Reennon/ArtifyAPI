@@ -3,7 +3,8 @@ import shutil
 from http import HTTPStatus
 
 from flask import request, flash
-from flask_login import current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from flask_restful import Resource
 
 from app import db
@@ -12,10 +13,13 @@ from models.curent_preference import Curent_user_preference
 from models.preference_user import Preference_user
 from utils.files import Files
 from utils.utils import Utils
-
+from models.user import User
 
 class LoadPreferenceResource(Resource):
+    @jwt_required()
     def get(self):
+        current_user_name = get_jwt_identity()
+        current_user = User.query.filter_by(username=current_user_name).first()
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         user_preferences = Curent_user_preference.query.filter_by(preference_user_id=preference_user.id)
         print(user_preferences)

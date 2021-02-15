@@ -11,6 +11,11 @@ from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
 from resources.new_build_resource import NewBuildResource
 from resources.error_resource import ErrorResource
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
 
 APP_NAME = "Artify"
 APP_PREFIX = "/artify"
@@ -30,7 +35,7 @@ def create_app(config=None):
     """
 
     app = Flask(APP_NAME)
-
+    jwt = JWTManager(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = Constants.SQLALCHEMY_DATABASE_URI
     app.config['SECRET_KEY'] = Constants.SECRET_KEY
     api = Api(app, prefix=APP_PREFIX)
@@ -63,9 +68,7 @@ def create_app(config=None):
 
     @app.before_request
     def before_request_auth():
-        if not current_user.is_authenticated:
-            user = User.query.filter_by(email="user").first()
-            login_user(user)
+        pass
 
     return app
 
@@ -87,7 +90,8 @@ def register_resource(api):
     from resources.upload_resource import UploadResource
     from resources.smoke_resource import SmokeResorces
     from resources.get_folder_tree_resource import GetFolderTreeResource
-
+    from resources.dropdown_menu_resource import GetUserProjectResource
+    from resources.LoginResource import LoginResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes GET
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes, POST
     api.add_resource(UploadScriptResource, "/script")  # script upload routes, POST
@@ -101,16 +105,17 @@ def register_resource(api):
     api.add_resource(LoadPreferenceResource, "/preference")  # GET, POST
     api.add_resource(UpLoadPreferenceResource, "/upload_preference/<string:name>")  # GET
     api.add_resource(UploadResource, "/resources")  # POST
-    api.add_resource(GetFolderTreeResource, "/tree")
+    api.add_resource(GetFolderTreeResource, "/tree")  # GET
+    api.add_resource(GetUserProjectResource, "/dropdown")  # GET
+    api.add_resource(LoginResource, "/login")  # GET
     # ('/login', methods=['POST'])
     # ('/logout',methods=['GET, POST'])
     # ('/signup', methods={'POST'})
 
 
 def import_bluprint_resource():
-    from resources.auth.login import login
     from resources.auth.signup import signup
-    from resources.auth.logout import logout
+
 
 
 def setup_origins_cors(api):

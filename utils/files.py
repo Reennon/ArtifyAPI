@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from flask_jwt_extended import create_access_token
 from flask_login import login_user
 
 from constants import Constants
@@ -66,11 +67,11 @@ class Files:
             print(f" preference_user  {user_preference_user.id}\n"
                   f" preference_user  {current_preference.name}")
             db.session.commit()
-        login_user(user)
-        Files.check_cloud_folder(user,current_preference )
+        access_token = create_access_token(identity=user.username, expires_delta=False)
+        Files.check_cloud_folder(user,current_preference)
         shutil.copytree(Files.get_full_path(Constants.cloud_folder_path(user, current_preference)),
                         Constants.PREFERENCE_PATH, dirs_exist_ok=True)
-
+        return str(access_token)
     @staticmethod
     def get_all_files_from_db_by_user_preference(preference_id):
         pref_files = Preference_file.query.filter_by(preference_id=preference_id)

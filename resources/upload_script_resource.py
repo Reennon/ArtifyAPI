@@ -3,7 +3,8 @@ import shutil
 from http import HTTPStatus
 
 from flask import request, flash
-from flask_login import current_user
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 from flask_restful import Resource
 
 from app import db
@@ -12,13 +13,14 @@ from models.curent_preference import Curent_user_preference
 from models.preference_user import Preference_user
 from utils.files import Files
 from utils.utils import Utils
-
+from models.user import User
 
 class UploadScriptResource(Resource):
     """
     POST endpoint handler to save script photo by user
     """
 
+    @jwt_required()
     def post(self):
         """
         Args:
@@ -30,7 +32,8 @@ class UploadScriptResource(Resource):
         Returns:
             200 OK
         """
-
+        current_user_name = get_jwt_identity()
+        current_user = User.query.filter_by(username=current_user_name).first()
         file = request.files['file']
         if not file.filename:
             return flash("None selected script")

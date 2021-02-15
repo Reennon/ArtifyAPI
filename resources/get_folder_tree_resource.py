@@ -1,14 +1,18 @@
-from flask_login import current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from flask_restful import Resource
 
 from models.curent_preference import Curent_user_preference
 from models.file import File
 from models.preference_file import Preference_file
 from models.preference_user import Preference_user
-
+from models.user import User
 
 class GetFolderTreeResource(Resource):
+    @jwt_required()
     def get(self):
+        current_user_name = get_jwt_identity()
+        current_user = User.query.filter_by(username=current_user_name).first()
         if current_user.username == "user":
             return {
                 "Cloud": {
