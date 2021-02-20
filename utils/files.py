@@ -71,7 +71,7 @@ class Files:
         Files.check_cloud_folder(user,current_preference)
         shutil.copytree(Files.get_full_path(Constants.cloud_folder_path(user, current_preference)),
                         Constants.PREFERENCE_PATH, dirs_exist_ok=True)
-        return str(access_token)
+        return {"token": 'Bearer '+access_token}
     @staticmethod
     def get_all_files_from_db_by_user_preference(preference_id):
         pref_files = Preference_file.query.filter_by(preference_id=preference_id)
