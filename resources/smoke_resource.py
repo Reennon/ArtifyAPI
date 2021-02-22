@@ -1,9 +1,4 @@
-from http import HTTPStatus
-
-from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
-
-from models.user import User
 
 
 class SmokeResorces(Resource):
@@ -11,7 +6,6 @@ class SmokeResorces(Resource):
     GET endpoint handler to test the process
     """
 
-    @jwt_required()
     def get(self):
         """
         send to core test message
@@ -21,6 +15,28 @@ class SmokeResorces(Resource):
         current_preference = Curent_user_preference.query.filter_by(current_user_preference=True,
                                                                 preference_user_id=user_preference_user.id).first()
         Files.update_db(current_user,current_preference)"""
-        current_user_name = get_jwt_identity()
-        current_user = User.query.filter_by(username=current_user_name).first()
-        return f'{current_user.username}', HTTPStatus.OK
+        return {
+            "Cloud": {
+                "Preference_user_2": {
+                    "3E": {
+                        "Modules": {
+                            "smoke_resource.py": {},
+                            "Resources - Copy": {
+                                "app.py": {},
+                                "models.py": {}
+                            },
+                            "Scripts - Copy": {
+                                "manege.py": {}
+                            }
+                        },
+                        "Resources": {
+                            "app.py": {},
+                            "models.py": {}
+                        },
+                        "Scripts": {
+                            "manege.py": {}
+                        }
+                    }
+                }
+            }
+        }
