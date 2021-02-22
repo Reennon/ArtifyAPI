@@ -92,6 +92,7 @@ def register_resource(api):
     from resources.get_folder_tree_resource import GetFolderTreeResource
     from resources.dropdown_menu_resource import GetUserProjectResource
     from resources.LoginResource import LoginResource
+    from resources.UploadScriptByJson import UploadScriptByJsonResource
     api.add_resource(SmokeResorces, "/smoke")  # test rotes GET
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes, POST
     api.add_resource(UploadScriptResource, "/script")  # script upload routes, POST
@@ -108,6 +109,7 @@ def register_resource(api):
     api.add_resource(GetFolderTreeResource, "/tree")  # GET
     api.add_resource(GetUserProjectResource, "/dropdown")  # GET
     api.add_resource(LoginResource, "/login")  # GET
+    api.add_resource(UploadScriptByJsonResource,'/script/json')
     # ('/login', methods=['POST'])
     # ('/logout',methods=['GET, POST'])
     # ('/signup', methods={'POST'})
