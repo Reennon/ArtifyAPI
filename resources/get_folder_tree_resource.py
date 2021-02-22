@@ -13,14 +13,7 @@ class GetFolderTreeResource(Resource):
     def get(self):
         current_user_name = get_jwt_identity()
         current_user = User.query.filter_by(username=current_user_name).first()
-        if current_user.username == "user":
-            return {
-                "Cloud": {
-                    "Preference_user_2": {
-                        "3E": {}
-                    }
-                }
-            }
+
         user_preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         curent_preference = Curent_user_preference.query.filter_by(preference_user_id=user_preference_user.id,
                                                                    current_user_preference=True).first()
