@@ -1,13 +1,15 @@
 from http import HTTPStatus
 
 from flask import request
-from flask_login import current_user
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 from flask_restful import Resource
 
 from constants import Constants
 from models.preference_user import Preference_user
 from utils.socket_connect import SocketConnection
 from models.curent_preference import Curent_user_preference
+from models.user import User
 
 class BuildResource(Resource):
     """
@@ -25,6 +27,7 @@ class BuildResource(Resource):
         SocketConnection.socket_send(str({"command": "get_build"}))
         return HTTPStatus.OK
 
+    @jwt_required()
     def post(self):
         """
         Point:
@@ -53,6 +56,8 @@ class BuildResource(Resource):
             Http response 200
 
         """
+        current_user_name = get_jwt_identity()
+        current_user = User.query.filter_by(username=current_user_name).first()
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         current_preference = Curent_user_preference(preference_user_id=preference_user.id, current_user_preference=True)
         data = request.get_json()

@@ -4,7 +4,10 @@ from flask import flash
 from flask import request
 from flask_login import current_user, logout_user
 from werkzeug.security import check_password_hash
-
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 from app import db
 from auth.auth import auth
 from models.user import User
@@ -46,8 +49,8 @@ def login():
         return "you already logged in "
     if user.email != 'user':
         Files.prepear_to_logout()
-        logout_user()
 
-    Files.prepear_to_login(user, preference_name, db)
 
-    return f"hello {user.username}, welcome on {preference_name}"
+    token = Files.prepear_to_login(user, preference_name, db)
+
+    return f"hello {user.username}, welcome on {preference_name} , TOKEN = {token} "
