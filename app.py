@@ -9,7 +9,7 @@ from flask_cors import CORS
 from constants import Constants
 from resources.run_build_resource import RunBuildResource
 from resources.update_executable_resource import UpdateExecutableResource
-from resources.new_build_resource import NewBuildResource
+
 from resources.error_resource import ErrorResource
 from flask_jwt_extended import (
     JWTManager,
@@ -83,6 +83,7 @@ def register_resource(api):
     Returns:
          None
     """
+    from resources.new_build_resource import NewBuildResource
     from resources.switch_preference import SwitchPreference
     from resources.upload_script_resource import UploadScriptResource
     from resources.upload_module_resource import UploadModuleResource
@@ -94,6 +95,9 @@ def register_resource(api):
     from resources.get_folder_tree_resource import GetFolderTreeResource
     from resources.dropdown_menu_resource import GetUserProjectResource
     from resources.LoginResource import LoginResource
+    from resources.UploadScriptByJson import UploadScriptByJsonResource
+    from resources.GetOutputResource import GetOutputResource
+
     api.add_resource(SmokeResorces, "/smoke")  # test rotes GET
     api.add_resource(UploadPhotoResource, "/photo")  # photo upload routes, POST
     api.add_resource(UploadScriptResource, "/script")  # script upload routes, POST
@@ -110,6 +114,8 @@ def register_resource(api):
     api.add_resource(GetFolderTreeResource, "/tree")  # GET
     api.add_resource(GetUserProjectResource, "/dropdown")  # GET
     api.add_resource(LoginResource, "/login")  # GET
+    api.add_resource(UploadScriptByJsonResource,'/script/json')  #POST
+    api.add_resource(GetOutputResource,'/output')   #GET
     # ('/login', methods=['POST'])
     # ('/logout',methods=['GET, POST'])
     # ('/signup', methods={'POST'})

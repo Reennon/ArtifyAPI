@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 from flask_jwt_extended import create_access_token
 from flask_login import login_user
@@ -176,3 +177,13 @@ class Files:
             preference_file = Preference_file(file_id=file.id, preference_id=curent_preference.preference_id)
             db.session.add(preference_file)
             db.session.commit()
+    @staticmethod
+    def run(cmd):
+        os.environ['PYTHONUNBUFFERED'] = "1"
+        proc = subprocess.Popen(cmd,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT,
+                                )
+        stdout, stderr = proc.communicate()
+
+        return proc.returncode, stdout, stderr
