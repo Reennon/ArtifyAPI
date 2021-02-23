@@ -59,7 +59,7 @@ class BuildResource(Resource):
         current_user_name = get_jwt_identity()
         current_user = User.query.filter_by(username=current_user_name).first()
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
-        current_preference = Curent_user_preference(preference_user_id=preference_user.id, current_user_preference=True)
+        current_preference = Curent_user_preference.query.filter_by(preference_user_id=preference_user.id, current_user_preference=True).first()
         data = request.get_json()
         user_id = data["userId"]
         dll_name = data.get("dllName", "application")
