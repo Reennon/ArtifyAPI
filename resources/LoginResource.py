@@ -13,6 +13,8 @@ from flask_jwt_extended import (
 )
 from app import db
 from auth.auth import auth
+from models.curent_preference import Curent_user_preference
+from models.preference_user import Preference_user
 from models.user import User
 from utils.files import Files
 
@@ -54,6 +56,13 @@ class LoginResource(Resource):
             return HTTPStatus.BAD_REQUEST
         if user.email != 'user':
             Files.prepear_to_logout()
+        current_user = User.query.filter_by(id=user.id).first()
+        preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
+        current_preference = Curent_user_preference.query.filter_by(preference_user_id=preference_user.id,current_user_preference=True).first()
+
+        if preference_name is None:
+            preference_name=current_preference.name
+
 
         token = Files.prepear_to_login(user, preference_name, db)
 
