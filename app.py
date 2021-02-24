@@ -12,7 +12,9 @@ from resources.update_executable_resource import UpdateExecutableResource
 
 from resources.error_resource import ErrorResource
 from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token,
+    JWTManager,
+    jwt_required,
+    create_access_token,
     get_jwt_identity
 )
 
@@ -133,4 +135,4 @@ def setup_origins_cors(api):
         None:
     """
     from constants import Constants as Const
-    CORS(api, origins=[r"http://localhost:5000", r"https://localhost:5001"])
+    CORS(api, origins=[r"http://localhost:5000", r"https://localhost:5001", r"http://192.168.0.104:5000"])
