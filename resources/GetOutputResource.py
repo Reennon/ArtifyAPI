@@ -43,7 +43,7 @@ class GetOutputResource(Resource):
                     output = file.read()
                     file.close()
                     os.remove(file_name)
-                    return output
+                    return {'output': output}
 
             except:
                 pass
