@@ -40,7 +40,6 @@ class BuildResource(Resource):
              KEY                TYPE        DESC
         {
             "command": "build"  #string     build command tells core which command to execute
-            , "userId":         #int        User ID is required for core to return the build, user gave
             , "dllName":        #string     Dll Name is required for core to name the build, user specified
             , "path":           #string     Path to the preference folder on cloud
             , "ASSEMBLY_NAME":  #string     Assembly Name is not required for core, but preferred to have one,
@@ -61,7 +60,7 @@ class BuildResource(Resource):
         preference_user = Preference_user.query.filter_by(user_id=current_user.id).first()
         current_preference = Curent_user_preference.query.filter_by(preference_user_id=preference_user.id, current_user_preference=True).first()
         data = request.get_json()
-        user_id = data["userId"]
+        user_id = current_user.id
         dll_name = data.get("dllName", "application")
         path = Constants.cloud_folder_path(current_user, current_preference)
         assembly_name = data.get("ASSEMBLY_NAME", None)
